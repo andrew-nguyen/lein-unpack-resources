@@ -1,9 +1,11 @@
 (ns leiningen.unpack-resources
   (:require [clojure.java.classpath :as cp]
             [clojure.pprint :as pprint]
+            [leiningen.compile :as lein.compile]
             [leiningen.deps :refer [deps]]
             [leiningen.jar :as lein.jar]
-            [leiningen.core.project :as project])
+            [leiningen.core.project :as project]
+            [robert.hooke :as hooke])
   (:import [net.lingala.zip4j.core ZipFile]
            [net.lingala.zip4j.exception ZipException]))
 
@@ -37,10 +39,22 @@
         classpath-jars (get-jar-files (update-in project [:dependencies] conj resource))
         jar-name (jar-name group artifact version "jar")
         ]
-    (if-let [jar-file (first (filter #(.endsWith (.getName %) jar-name) classpath-jars))]
-      (let [jar-file-path (.getAbsolutePath jar-file)]
-        (println "Extracting:  " jar-file-path)
-        (println "Destination: " extract-path)
-        (unzip-file jar-file-path extract-path))
-      (println "Please specify a valid resource and extract path"))
+    (if (.exists (clojure.java.io/as-file extract-path))
+      (println "Destination directory exists, skipping unpack. lein clean, if necessary") 
+      (if-let [jar-file (first (filter #(.endsWith (.getName %) jar-name) classpath-jars))]
+        (let [jar-file-path (.getAbsolutePath jar-file)]
+          (println "Extracting:  " jar-file-path)
+          (println "Destination: " extract-path)
+          (unzip-file jar-file-path extract-path))
+        (println "Please specify a valid resource and extract path")))
     ))
+
+(defn compile-hook
+  [task &  [project & more-args :as args]]
+  (println "Unpacking resources...")
+  (unpack-resources project)
+  (apply task args))
+
+(defn hooks 
+  []
+  (hooke/add-hook #'lein.compile/compile #'compile-hook))

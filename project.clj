@@ -5,4 +5,5 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/java.classpath "0.2.2"]
                  [net.lingala.zip4j/zip4j "1.3.2"]]
+  :deploy-repositories [["clojars" {:sign-releases false}]]
   :eval-in-leiningen true)

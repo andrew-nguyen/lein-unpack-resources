@@ -31,23 +31,24 @@
 
 (defn unpack-resources
   [project & args]
-  (let [resource (get-in project [:unpack-resources :resource])
-        group-artifact (first resource)
-        version (second resource)
-        extract-path (get-in project [:unpack-resources :extract-path])
-        [group artifact] (clojure.string/split (name group-artifact) #"/")
-        classpath-jars (get-jar-files (update-in project [:dependencies] conj resource))
-        jar-name (jar-name group artifact version "jar")
-        ]
-    (if (.exists (clojure.java.io/as-file extract-path))
-      (println "Destination directory exists, skipping unpack. lein clean, if necessary") 
-      (if-let [jar-file (first (filter #(.endsWith (.getName %) jar-name) classpath-jars))]
-        (let [jar-file-path (.getAbsolutePath jar-file)]
-          (println "Extracting:  " jar-file-path)
-          (println "Destination: " extract-path)
-          (unzip-file jar-file-path extract-path))
-        (println "Please specify a valid resource and extract path")))
-    ))
+  (when (:unpack-resources project)
+    (let [resource (get-in project [:unpack-resources :resource])
+          group-artifact (first resource)
+          version (second resource)
+          extract-path (get-in project [:unpack-resources :extract-path])
+          [group artifact] (clojure.string/split (name group-artifact) #"/")
+          classpath-jars (get-jar-files (update-in project [:dependencies] conj resource))
+          jar-name (jar-name group artifact version "jar")
+          ]
+      (if (.exists (clojure.java.io/as-file extract-path))
+        (println "Destination directory exists, skipping unpack. lein clean, if necessary") 
+        (if-let [jar-file (first (filter #(.endsWith (.getName %) jar-name) classpath-jars))]
+          (let [jar-file-path (.getAbsolutePath jar-file)]
+            (println "Extracting:  " jar-file-path)
+            (println "Destination: " extract-path)
+            (unzip-file jar-file-path extract-path))
+          (println "Please specify a valid resource and extract path")))
+      )))
 
 (defn compile-hook
   [task &  [project & more-args :as args]]

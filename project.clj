@@ -1,4 +1,4 @@
-(defproject lein-unpack-resources "0.1.0-SNAPSHOT"
+(defproject lein-unpack-resources "0.1.0"
   :description "Fetches a maven-based jar and unpacks it and adds it as a resource"
   :url "https://github.com/andrew-nguyen/lein-unpack-resources"
   :license {:name "Eclipse Public License"

@@ -1,22 +1,21 @@
 # lein-unpack-resources
 
-A Leiningen plugin to do many wonderful things.
+A Leiningen plugin that fetches a maven-based jar, unpacks it, and adds it as a
+resource
 
 ## Usage
 
-FIXME: Use this for user-level plugins:
+Use this for user-level plugins:
 
-Put `[lein-unpack-resources "0.1.0-SNAPSHOT"]` into the `:plugins` vector of your
-`:user` profile, or if you are on Leiningen 1.x do `lein plugin install
-lein-unpack-resources 0.1.0-SNAPSHOT`.
+Put `[lein-unpack-resources "0.1.1"]` into the `:plugins` vector of your
+`:user` profile
 
-FIXME: Use this for project-level plugins:
+Use this for project-level plugins:
 
-Put `[lein-unpack-resources "0.1.0-SNAPSHOT"]` into the `:plugins` vector of your project.clj.
+Put `[lein-unpack-resources "0.1.1"]` into the `:plugins` vector of your project.clj.
 
-FIXME: and add an example usage that actually makes sense:
-
-    $ lein unpack-resources
+Specify `:unpack-resources {:resource <resource>, :extract-path <path to extract
+jar>}`
 
 ## License
 

@@ -50,10 +50,15 @@
           (println "Please specify a valid resource and extract path")))
       )))
 
+(def called? (atom false))
+
 (defn compile-hook
   [task &  [project & more-args :as args]]
-  (println "Unpacking resources...")
-  (unpack-resources project)
+  ; compile hook only fires once
+  (when-not @called?
+    (reset! called? true)
+    (println "Unpacking resources...")
+    (unpack-resources project))
   (apply task args))
 
 (defn hooks 

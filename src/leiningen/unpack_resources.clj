@@ -23,8 +23,11 @@
 (defn unzip-file
   [zip dest]
   (try
-    (-> (ZipFile. zip)
-        (.extractAll dest))
+    (let [zf (ZipFile. zip)]
+      (doseq [file-header (.getFileHeaders zf)
+              :let [file-name (.getFileName file-header)]
+              :when (not= file-name "META-INF/MANIFEST.MF")]
+        (.extractFile zf file-header dest)))
     (catch ZipException e
       (.printStackTrace e)
       e)))
